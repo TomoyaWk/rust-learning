@@ -61,27 +61,20 @@ fn main() {
 
     println!("{}", st);
     println!("{}",&st[0..6]);
-    
-    
-    //構造体について
-    struct  Person {
-        name: String,
-        age: u8
-    }
-    //各フィールドに値を設定（mutableにして変更することも可能）
-    let jiro = Person{name: String::from("jiro"), age: 24};
-    println!("{},{}",jiro.name, jiro.age);
-
     //タプル構造体
     struct RGB(u32, u32, u32);
     let color = RGB(255,128,0);
     println!("{},{},{}",color.0,color.1,color.2);
-
-
+    //構造体について
+    #[derive(Debug)]
+    pub struct  Person {
+        name: String,
+        age: u8
+    }
     //構造体にメソッド実装
     impl Person {
         //関連関数　構造体に関連する
-        fn new(name: String, age: u8)->Person {
+        pub fn new(name: String, age: u8)->Person {
             Person { name, age}
         }
         //メソッド　引数として&self, selfを指定して処理対象インスタンスを指定する
@@ -93,6 +86,11 @@ fn main() {
             self.age += incr
         }
     }
+
+    //各フィールドに値を設定（mutableにして変更することも可能）
+    let jiro = Person{name: String::from("jiro"), age: 24};
+    println!("{},{}",jiro.name, jiro.age);
+
     let mut taro=Person::new(String::from("taro"),10);
     let age_plus = taro.age_increment(1);
     println!("taro age = {}", age_plus);
@@ -100,5 +98,56 @@ fn main() {
 
     taro.age_incre_replace(15);
     println!("taro age = {}", &taro.age);
+    //debugトレイトが実装されていると構造体（その他変数も）の中身を表示できる
+    println!("{:?}", taro);
+
+    
+    #[derive(Debug)]
+    struct Parents<'a, 'b> {
+        father: &'a Person,
+        mother: &'b Person
+    }
+    impl<'a, 'b> Parents<'a, 'b> {
+        fn new(father: &'a Person, mother: &'b Person)-> Parents<'a, 'b> {
+            Parents{father, mother}
+        }
+    }
+
+    let saburo = Person{name:String::from("saburo"), age: 35};
+    let hanako = Person{name:String::from("hanako"), age: 27};
+
+    let sato_family = Parents::new(&saburo, &hanako);
+
+    println!("{:?}", sato_family);
+
+
+    //列挙型
+    enum Sign {
+        Positive,
+        Zero,
+        Negative
+    }
+
+    fn determine_sign(x: i32) -> Sign {
+        if x < 0 {
+            Sign::Negative
+        } else if x > 0  {
+            Sign::Positive
+        } else {
+            Sign::Zero
+        }
+    }
+
+    fn print_sign (s: Sign) {
+        match s {
+            Sign::Positive => println!("+(Positive)"),
+            Sign::Zero => println!("0(Zero)"),
+            Sign::Negative => println!("-(Negative)")
+        }
+    }
+
+    print_sign(determine_sign(1));
+    print_sign(determine_sign(0));
+    print_sign(determine_sign(-1));
 
 }
