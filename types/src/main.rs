@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 fn main() {
     //プリミティブ型
     let ii = 1_i8;
@@ -102,6 +104,7 @@ fn main() {
     println!("{:?}", taro);
 
     
+    #[allow(dead_code)]
     #[derive(Debug)]
     struct Parents<'a, 'b> {
         father: &'a Person,
@@ -137,7 +140,7 @@ fn main() {
             Sign::Zero
         }
     }
-
+    //Enumとmatch構文はセットで使用すると相性がよい
     fn print_sign (s: Sign) {
         match s {
             Sign::Positive => println!("+(Positive)"),
@@ -150,4 +153,20 @@ fn main() {
     print_sign(determine_sign(0));
     print_sign(determine_sign(-1));
 
+    //std::cmp::Ordering
+    // > x.cmp(&y)でxとyの大小関係を比較し、その結果をOrdering型で返却するもの
+    //Ordering型の　Less/Equal/Greaterのいずれかに判定できる
+    fn determine_sign_cmp(x:i32) -> Sign {
+        match x.cmp(&0) {
+            Ordering::Greater => Sign::Positive,
+            Ordering::Less => Sign::Negative,
+            Ordering::Equal => Sign::Zero
+        }
+    }
+
+    print_sign(determine_sign_cmp(-1));
+    print_sign(determine_sign_cmp(0));
+
+    let inp = "1001001";
+    print!("{:?}", t=i32::from_str_radix(inp, 2))
 }
